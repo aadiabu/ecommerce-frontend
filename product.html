@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Details</title>
+  <link rel="stylesheet" href="styles/main.css" />
+  <style>
+    .product-detail {
+      padding: 2rem;
+      max-width: 900px;
+      margin: auto;
+    }
+    .product-info {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .product-image-large {
+      max-width: 300px;
+      width: 100%;
+      border: 1px solid #ddd;
+      transition: transform 0.3s ease;
+      cursor: zoom-in;
+    }
+    .product-image-large:hover {
+      transform: scale(1.5);
+    }
+    .quantity-selector {
+      display: flex;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+    .quantity-selector input {
+      width: 50px;
+      text-align: center;
+    }
+    @media (max-width: 768px) {
+      .product-info {
+        flex-direction: column;
+        align-items: center;
+      }
+      .product-image-large:hover {
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="logo">ShopBrand</div>
+    <div class="cart">
+      🛒 <span id="cart-count">0</span>
+    </div>
+  </header>
+
+  <main id="product-detail" class="product-detail">
+    <p>Loading product details...</p>
+  </main>
+
+  <script src="scripts/product.js"></script>
+</body>
+</html>

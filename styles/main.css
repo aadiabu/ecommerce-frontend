@@ -227,3 +227,39 @@ body {
   border-radius: 5px;
   cursor: pointer;
 }
+/*product detailing*/
+.product-detail {
+  padding: 2rem;
+  max-width: 900px;
+  margin: auto;
+}
+
+.product-info {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.product-image-large {
+  max-width: 300px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.product-price {
+  font-size: 1.5rem;
+  color: #ff5733;
+}
+@media (max-width: 768px) {
+  .product-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .product-image-large {
+    max-width: 100%;
+  }
+}
