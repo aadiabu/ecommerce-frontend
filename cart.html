@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <style>
+    .cart-container { max-width: 900px; margin: auto; padding: 2rem; }
+    .cart-item { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center; flex-wrap: wrap; border-bottom: 1px solid #ccc; padding-bottom: 1rem; }
+    .cart-item img { width: 100px; height: auto; }
+    .item-details { flex-grow: 1; }
+    .quantity-controls { display: flex; align-items: center; gap: 0.5rem; }
+    .total-price { font-size: 1.5rem; font-weight: bold; text-align: right; margin-top: 2rem; }
+    .cart-buttons { display: flex; justify-content: space-between; margin-top: 2rem; }
+    .cart-buttons button, .cart-buttons a { padding: 0.75rem 1.5rem; font-size: 1rem; cursor: pointer; }
+    @media (max-width: 600px) {
+      .cart-item { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="index.html" class="logo">ShopBrand</a>
+    <a href="cart.html" class="cart">🛒 <span id="cart-count">0</span></a>
+  </header>
+
+  <main class="cart-container">
+    <h1>Your Cart</h1>
+    <div id="cart-items"></div>
+    <p class="total-price">Total: $<span id="total-price">0.00</span></p>
+    <div class="cart-buttons">
+      <a href="index.html">← Continue Shopping</a>
+      <button id="checkout-btn">Proceed to Checkout</button>
+    </div>
+  </main>
+
+  <script>
+    const cartItemsContainer = document.getElementById('cart-items');
+    const totalPriceElem = document.getElementById('total-price');
+    const cartCount = document.getElementById('cart-count');
+    const checkoutBtn = document.getElementById('checkout-btn');
+
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    function updateCartDisplay() {
+      cartItemsContainer.innerHTML = '';
+      let total = 0;
+
+      cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+
+        const div = document.createElement('div');
+        div.classList.add('cart-item');
+        div.innerHTML = `
+          <img src="${item.image}" alt="${item.title}">
+          <div class="item-details">
+            <h3>${item.title}</h3>
+            <p>Size: ${item.selectedSize || 'N/A'}</p>
+            <p>Price: $${item.price.toFixed(2)}</p>
+            <div class="quantity-controls">
+              <button onclick="updateQuantity(${index}, -1)">−</button>
+              <input type="number" min="1" value="${item.quantity}" readonly>
+              <button onclick="updateQuantity(${index}, 1)">+</button>
+              <button onclick="removeItem(${index})">Remove</button>
+            </div>
+          </div>
+        `;
+        cartItemsContainer.appendChild(div);
+      });
+
+      totalPriceElem.textContent = total.toFixed(2);
+      cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+      checkoutBtn.disabled = cart.length === 0;
+    }
+
+    function updateQuantity(index, change) {
+      const newQty = cart[index].quantity + change;
+      if (newQty >= 1) {
+        cart[index].quantity = newQty;
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartDisplay();
+      }
+    }
+
+    function removeItem(index) {
+      cart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartDisplay();
+    }
+
+    checkoutBtn.addEventListener('click', () => {
+      if (cart.length === 0) return;
+      window.location.href = 'checkout.html';
+    });
+
+    updateCartDisplay();
+  </script>
+</body>
+</html>
