@@ -5,6 +5,69 @@
   <title>Ecommerce Header</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles/main.css" />
+  <style>/* Navbar styling */
+.navbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Left side (logo/title) */
+.nav-left h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #333;
+}
+
+/* Right side (auth buttons) */
+.nav-right {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.nav-right a,
+.nav-right button {
+  text-decoration: none;
+  font-weight: 500;
+  padding: 6px 12px;
+  border: none;
+  background: transparent;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.nav-right button:hover,
+.nav-right a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav-right {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 10px;
+  }
+
+  .nav-right a,
+  .nav-right button {
+    padding: 8px 0;
+    width: 100%;
+  }
+}
+</style>
 </head>
 <body>
   <header class="site-header">
@@ -20,6 +83,15 @@
       <div class="search-bar">
         <input type="text" placeholder="Search products..." />
       </div>
+
+<!--login and signup-->
+      <nav class="navbar">
+  <div class="nav-left">
+  </div>
+  <div class="nav-right" id="auth-buttons">
+    <!-- JS will dynamically insert Login/Signup or Logout -->
+  </div>
+</nav>
 
       <div class="cart">
   <!-- Cart Icon -->
@@ -49,6 +121,46 @@
   <!-- Product cards will be injected here -->
 </section>
 
+<!--login signup js-->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAqatuUSqEiogmlQwZe4i0lBxVWAg6QRcw",
+    authDomain: "ecommerce-frontend-7dcfd.firebaseapp.com",
+    projectId: "ecommerce-frontend-7dcfd",
+    storageBucket: "ecommerce-frontend-7dcfd.firebasestorage.app",
+    messagingSenderId: "394011046834",
+    appId: "1:394011046834:web:526cd2cd27cb0ca691aaab",
+    measurementId: "G-NNVD1QPBJK"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  const authButtons = document.getElementById("auth-buttons");
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      authButtons.innerHTML = `
+        <span>Welcome, ${user.email}</span>
+        <button id="logout-btn">Logout</button>
+      `;
+
+      document.getElementById("logout-btn").addEventListener("click", () => {
+        signOut(auth).then(() => {
+          location.reload(); // refresh UI
+        });
+      });
+    } else {
+      authButtons.innerHTML = `
+        <a href="login.html">Login</a>
+        <a href="signup.html">Sign Up</a>
+      `;
+    }
+  });
+</script>
 
   <script src="scripts/app.js"></script>
 </body>

@@ -17,21 +17,56 @@
       <a href="login.html">Already have an account? Login</a>
     </form>
   </div>
- 
- <script>
-document.getElementById('signup-form').addEventListener('submit', function (e) {
-  const password = document.getElementById('signup-password').value;
-  const confirm = this.querySelector('input[type="password"]:nth-child(4)').value;
 
-  const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-  if (!strongPassword.test(password)) {
-    alert("Password must be at least 8 characters with uppercase, lowercase, and a number.");
+  <!-- Firebase SDKs -->
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
+  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAqatuUSqEiogmlQwZe4i0lBxVWAg6QRcw",
+    authDomain: "ecommerce-frontend-7dcfd.firebaseapp.com",
+    projectId: "ecommerce-frontend-7dcfd",
+    storageBucket: "ecommerce-frontend-7dcfd.firebasestorage.app",
+    messagingSenderId: "394011046834",
+    appId: "1:394011046834:web:526cd2cd27cb0ca691aaab",
+    measurementId: "G-NNVD1QPBJK"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const auth = getAuth(app); // ✅ This was missing
+
+  document.getElementById('signup-form').addEventListener('submit', function (e) {
     e.preventDefault();
-  } else if (password !== confirm) {
-    alert("Passwords do not match.");
-    e.preventDefault();
-  }
-});
+
+    const inputs = this.querySelectorAll('input');
+    const fullName = inputs[0].value.trim();
+    const email = inputs[1].value.trim();
+    const password = inputs[2].value;
+    const confirm = inputs[3].value;
+
+    const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    if (!strongPassword.test(password)) {
+      alert("Password must be at least 8 characters with uppercase, lowercase, and a number.");
+      return;
+    }
+    if (password !== confirm) {
+      alert("Passwords do not match.");
+      return;
+    }
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        alert("✅ Signup successful!");
+        window.location.href = "login.html";
+      })
+      .catch((error) => {
+        alert("❌ " + error.message);
+      });
+  });
 </script>
 
 </body>
